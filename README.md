@@ -25,4 +25,5 @@ First build OpenVX reference implementaion on Linux
         build/test_vx_isp
 
 * convert the RGB image into a png for viewing
+
         convert -depth 8 -size 640x480+0 rgb:demosaic.rgb pic.png
