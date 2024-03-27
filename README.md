@@ -10,9 +10,7 @@ First build OpenVX reference implementaion on Linux
 * Use Build.py script
 
       cd OpenVX-sample-impl/
-      python Build.py --os=Linux 
-      cd build
-      make install
+      sudo python3 Build.py --os=Linux 
       
       
 * build vx-isp
@@ -24,6 +22,7 @@ First build OpenVX reference implementaion on Linux
 
         build/test_vx_isp
 
-* convert the RGB image into a png for viewing
+* convert the RGB image and scaled image into a png for viewing
 
-        convert -depth 8 -size 640x480+0 rgb:demosaic.rgb pic.png
+        convert -depth 8 -size 640x480 rgb:demosaic.rgb pic.png
+	convert -depth 8 -size 1280x960 rgb:scaled.rgb scaled.png	

@@ -74,6 +74,7 @@ int main()
 	if (vxGetStatus((vx_reference) context) == VX_SUCCESS) {
 		vx_uint32 i = 0;
 		vx_uint32 w = 640, h = 480;
+		vx_uint32 ow = 1280, oh = 960;
 		vx_char ext_kernels[][VX_MAX_FILE_NAME] = {
 			"openvx-isp",
 			"openvx-debug"
@@ -81,6 +82,13 @@ int main()
 		vx_image images[] = {
 			vxCreateImage(context, w, h, VX_DF_IMAGE_U16),	/* 0: u16 */
 			vxCreateImage(context, w, h, VX_DF_IMAGE_RGB),	/* 1: rgb */
+			vxCreateImage(context, w, h, VX_DF_IMAGE_U8),	/* 2: r */
+			vxCreateImage(context, w, h, VX_DF_IMAGE_U8),	/* 3: g */
+			vxCreateImage(context, w, h, VX_DF_IMAGE_U8),	/* 4: b */
+			vxCreateImage(context, ow, oh, VX_DF_IMAGE_U8),	/* 5: r */
+			vxCreateImage(context, ow, oh, VX_DF_IMAGE_U8),	/* 6: g */
+			vxCreateImage(context, ow, oh, VX_DF_IMAGE_U8),	/* 7: b */
+			vxCreateImage(context, ow, oh, VX_DF_IMAGE_RGB),/* 8: rgb */
 		};
 		fillTestPattern(images[0]);
 		status = VX_SUCCESS;
@@ -95,10 +103,17 @@ int main()
 		}
 		if (status == VX_SUCCESS) {
 			vx_graph graph = vxCreateGraph(context);
+
 			if (vxGetStatus((vx_reference) graph) == VX_SUCCESS) {
 				vx_node nodes[] = {
-					vxDemosaicNode(graph, images[0],
-						       images[1]),
+					vxDemosaicNode(graph, images[0], images[1]),
+					vxChannelExtractNode(graph, images[1], VX_CHANNEL_R, images[2]),
+					vxChannelExtractNode(graph, images[1], VX_CHANNEL_G, images[3]),
+					vxChannelExtractNode(graph, images[1], VX_CHANNEL_B, images[4]),
+					vxScaleImageNode(graph, images[2], images[5], VX_INTERPOLATION_BILINEAR),
+					vxScaleImageNode(graph, images[3], images[6], VX_INTERPOLATION_BILINEAR),
+					vxScaleImageNode(graph, images[4], images[7], VX_INTERPOLATION_BILINEAR),
+					vxChannelCombineNode(graph, images[5], images[6], images[7], NULL, images[8]),
 				};
 				if (status == VX_SUCCESS) {
 					status = vxVerifyGraph(graph);
@@ -117,6 +132,7 @@ int main()
 				vxReleaseGraph(&graph);
 			}
 			vxuFWriteImage(context, images[1], "demosaic.rgb");
+			vxuFWriteImage(context, images[8], "scaled.rgb");
 			for (i = 0; i < dimof(ext_kernels); i++) {
 				status |=
 				    vxUnloadKernels(context, ext_kernels[i]);
