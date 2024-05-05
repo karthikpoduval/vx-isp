@@ -10,7 +10,7 @@ First build OpenVX reference implementaion on Linux
 * Use Build.py script
 
       cd OpenVX-sample-impl/
-      sudo python3 Build.py --os=Linux 
+      sudo python3 Build.py --os=Linux --machine_install
       
       
 * build vx-isp
