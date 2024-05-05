@@ -170,8 +170,8 @@ vx_status vxDemosaic(vx_image src, vx_image dst)
 			vx_uint16 *byr =
 			    vxFormatImagePatchAddress2d(src_base_ptr, x, y,
 							&src_addr);
-			vxAddLogEntry((vx_reference) src, VX_FAILURE, "%x\n",
-				      *byr);
+			//vxAddLogEntry((vx_reference) src, VX_FAILURE, "%x\n",
+			//	      *byr);
 			vx_uint8 *rgb =
 			    vxFormatImagePatchAddress2d(dst_base_ptr, x, y,
 							&dst_addr);
